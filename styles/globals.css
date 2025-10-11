@@ -114,3 +114,229 @@ button:hover, a:hover {
   background: linear-gradient(180deg, #ff00ff, #00ffff);
 }
 
+/* Mobile Responsive Utilities */
+@media (max-width: 1024px) {
+  /* Tablet adjustments */
+  nav > div {
+    padding: 0 2rem !important;
+  }
+  
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile adjustments */
+  body {
+    font-size: 14px;
+  }
+  
+  nav {
+    padding: 0.75rem 0 !important;
+  }
+  
+  nav > div {
+    padding: 0 1.5rem !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  
+  nav > div > div:first-child {
+    font-size: 1.3rem !important;
+  }
+  
+  nav > div > div:last-child {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 1.5rem !important;
+    font-size: 0.75rem !important;
+  }
+  
+  h1 {
+    font-size: clamp(1.8rem, 6vw, 2.5rem) !important;
+    line-height: 1.2 !important;
+    letter-spacing: 2px !important;
+  }
+  
+  h2 {
+    font-size: clamp(1.5rem, 5vw, 2rem) !important;
+  }
+  
+  h3 {
+    font-size: clamp(1.2rem, 4vw, 1.5rem) !important;
+  }
+  
+  p {
+    font-size: clamp(0.9rem, 2.5vw, 1rem) !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* Container padding */
+  [style*="padding: 0 4rem"],
+  [style*="padding:0 4rem"] {
+    padding: 0 1.5rem !important;
+  }
+  
+  /* Grid adjustments */
+  [style*="grid-template-columns: repeat(3"],
+  [style*="grid-template-columns:repeat(3"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  [style*="grid-template-columns: repeat(auto-fit"],
+  [style*="grid-template-columns:repeat(auto-fit"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Button adjustments */
+  [style*="display: flex"][style*="gap: 2rem"] a,
+  [style*="display:flex"][style*="gap:2rem"] a {
+    width: 100%;
+    padding: 1rem 2rem !important;
+    font-size: 0.9rem !important;
+    text-align: center;
+  }
+  
+  /* Flex direction */
+  [style*="display: flex"][style*="gap: 2rem"],
+  [style*="display:flex"][style*="gap:2rem"] {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  
+  /* Stats and cards */
+  [style*="padding: 2rem"],
+  [style*="padding:2rem"] {
+    padding: 1.5rem !important;
+  }
+  
+  [style*="padding: 3rem"],
+  [style*="padding:3rem"] {
+    padding: 2rem !important;
+  }
+  
+  [style*="padding: 4rem"],
+  [style*="padding:4rem"] {
+    padding: 2rem !important;
+  }
+  
+  /* Font sizes */
+  [style*="font-size: 5.5rem"],
+  [style*="font-size:5.5rem"] {
+    font-size: 2.2rem !important;
+  }
+  
+  [style*="font-size: 4.5rem"],
+  [style*="font-size:4.5rem"] {
+    font-size: 2rem !important;
+  }
+  
+  [style*="font-size: 3.5rem"],
+  [style*="font-size:3.5rem"] {
+    font-size: 1.8rem !important;
+  }
+  
+  [style*="font-size: 2.5rem"],
+  [style*="font-size:2.5rem"] {
+    font-size: 1.5rem !important;
+  }
+  
+  [style*="font-size: 2rem"],
+  [style*="font-size:2rem"] {
+    font-size: 1.3rem !important;
+  }
+  
+  [style*="font-size: 1.8rem"],
+  [style*="font-size:1.8rem"] {
+    font-size: 1.2rem !important;
+  }
+  
+  /* Margins */
+  [style*="margin-bottom: 6rem"],
+  [style*="margin-bottom:6rem"] {
+    margin-bottom: 3rem !important;
+  }
+  
+  [style*="margin-bottom: 5rem"],
+  [style*="margin-bottom:5rem"] {
+    margin-bottom: 2.5rem !important;
+  }
+  
+  [style*="margin-bottom: 4rem"],
+  [style*="margin-bottom:4rem"] {
+    margin-bottom: 2rem !important;
+  }
+  
+  [style*="margin-bottom: 3rem"],
+  [style*="margin-bottom:3rem"] {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* Gaps */
+  [style*="gap: 3rem"],
+  [style*="gap:3rem"] {
+    gap: 1.5rem !important;
+  }
+  
+  /* Padding top for content */
+  [style*="padding-top: 120px"],
+  [style*="padding-top:120px"],
+  [style*="padding-top: 140px"],
+  [style*="padding-top:140px"] {
+    padding-top: 100px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Small mobile adjustments */
+  body {
+    font-size: 12px;
+  }
+  
+  nav > div > div:first-child {
+    font-size: 1.1rem !important;
+  }
+  
+  nav > div > div:last-child {
+    gap: 1rem !important;
+    font-size: 0.7rem !important;
+  }
+  
+  h1 {
+    font-size: clamp(1.5rem, 7vw, 2rem) !important;
+  }
+  
+  h2 {
+    font-size: clamp(1.25rem, 6vw, 1.75rem) !important;
+  }
+  
+  h3 {
+    font-size: clamp(1.1rem, 5vw, 1.3rem) !important;
+  }
+  
+  p {
+    font-size: clamp(0.85rem, 3vw, 0.95rem) !important;
+  }
+  
+  [style*="padding: 0 4rem"],
+  [style*="padding:0 4rem"],
+  [style*="padding: 0 1.5rem"],
+  [style*="padding:0 1.5rem"] {
+    padding: 0 1rem !important;
+  }
+  
+  [style*="padding: 2rem"],
+  [style*="padding:2rem"],
+  [style*="padding: 1.5rem"],
+  [style*="padding:1.5rem"] {
+    padding: 1rem !important;
+  }
+  
+  button, a[style*="padding"] {
+    padding: 0.8rem 1.5rem !important;
+    font-size: 0.85rem !important;
+  }
+}
+
