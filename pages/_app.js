@@ -8,8 +8,8 @@ export default function App({ Component, pageProps }) {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
         <meta name="theme-color" content="#000000" />
-        <meta name="description" content="Cyanpy - Advanced AI-Powered Education Platform" />
-        <title>Cyanpy - Next-Generation AI Education</title>
+        <meta name="description" content="CYANOPY - Indian AI Startup | Designing and Creating AI Tools for Services | Internships Available" />
+        <title>CYANOPY - Indian AI Startup | AI Tools & Internships</title>
         <style>{`
           /* Force mobile responsive overrides */
           

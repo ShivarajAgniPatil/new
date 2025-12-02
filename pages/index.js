@@ -1,478 +1,222 @@
-import { useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import * as THREE from 'three'
-import gsap from 'gsap'
-
-// Particle Field - Futuristic Tech Background
-function ParticleField() {
-  const pointsRef = useRef()
-  const particleCount = 2000
-  
-  useEffect(() => {
-    const positions = new Float32Array(particleCount * 3)
-    const colors = new Float32Array(particleCount * 3)
-    
-    for(let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 100
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 100
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 100
-      
-      // Cyan/electric blue colors
-      colors[i * 3] = Math.random() * 0.3
-      colors[i * 3 + 1] = 0.7 + Math.random() * 0.3
-      colors[i * 3 + 2] = 1
-    }
-    
-    pointsRef.current.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-    pointsRef.current.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
-  }, [])
-  
-  useFrame((state) => {
-    if(pointsRef.current && pointsRef.current.geometry && pointsRef.current.geometry.attributes.position) {
-      pointsRef.current.rotation.y = state.clock.elapsedTime * 0.05
-      pointsRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.1) * 0.2
-      
-      const positions = pointsRef.current.geometry.attributes.position.array
-      for(let i = 0; i < particleCount; i++) {
-        const i3 = i * 3
-        positions[i3 + 1] += Math.sin(state.clock.elapsedTime + i) * 0.002
-      }
-      pointsRef.current.geometry.attributes.position.needsUpdate = true
-    }
-  })
-  
-  return (
-    <points ref={pointsRef}>
-      <bufferGeometry />
-      <pointsMaterial size={0.15} vertexColors transparent opacity={0.8} />
-    </points>
-  )
-}
-
-// Holographic Grid
-function HolographicGrid() {
-  const gridRef = useRef()
-  
-  useFrame((state) => {
-    if(gridRef.current) {
-      gridRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 2
-      gridRef.current.material.opacity = 0.3 + Math.sin(state.clock.elapsedTime) * 0.1
-    }
-  })
-  
-  return (
-    <mesh ref={gridRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -10, 0]}>
-      <planeGeometry args={[100, 100, 50, 50]} />
-      <meshBasicMaterial color="#00ffff" wireframe transparent opacity={0.3} />
-    </mesh>
-  )
-}
-
 export default function Home() {
-  const heroRef = useRef()
-  const [glitchActive, setGlitchActive] = useState(false)
-  
-  useEffect(() => {
-    gsap.fromTo(heroRef.current,
-      { opacity: 0, y: 50 },
-      { opacity: 1, y: 0, duration: 1.5, delay: 0.5, ease: 'power3.out' }
-    )
-    
-    // Random glitch effect
-    const glitchInterval = setInterval(() => {
-      setGlitchActive(true)
-      setTimeout(() => setGlitchActive(false), 200)
-    }, 5000)
-    
-    return () => clearInterval(glitchInterval)
-  }, [])
-  
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', background: '#000' }}>
-      {/* Three.js Background */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
-        <Canvas camera={{ position: [0, 0, 40], fov: 75 }}>
-          <ambientLight intensity={0.3} />
-          <pointLight position={[20, 20, 20]} intensity={1} color="#00ffff" />
-          <pointLight position={[-20, -20, -20]} intensity={0.5} color="#ff00ff" />
-          <ParticleField />
-          <HolographicGrid />
-        </Canvas>
-      </div>
-      
-      {/* Scan Lines Overlay */}
-      <div style={scanLinesStyle} />
-      
+    <div style={pageStyle}>
       {/* Navigation */}
       <nav style={navStyle}>
         <div style={navContainerStyle}>
           <div style={logoStyle}>
-            <span style={glitchActive ? glitchStyle : {}}>{'>'} CYANPY_</span>
+            CYANOPY
           </div>
           <div style={navLinksStyle}>
-            <a 
-              href="/" 
-              style={{ ...navLinkStyle, color: '#00ffff' }}
-            >
-              <span style={linkGlowStyle}>HOME</span>
-            </a>
-            <a 
-              href="/programs" 
-              style={navLinkStyle}
-            >
-              PROGRAMS
-            </a>
-            <a 
-              href="/about" 
-              style={navLinkStyle}
-            >
-              ABOUT
-            </a>
-            <a 
-              href="/global" 
-              style={navLinkStyle}
-            >
-              GLOBAL
-            </a>
-            <a 
-              href="/contact" 
-              style={navLinkStyle}
-            >
-              CONTACT
-            </a>
+            <a href="/" style={{ ...navLinkStyle, color: '#6366f1', fontWeight: 600 }}>Home</a>
+            <a href="/programs" style={navLinkStyle}>Programs</a>
+            <a href="/about" style={navLinkStyle}>About</a>
+            <a href="/global" style={navLinkStyle}>Global</a>
+            <a href="/contact" style={navLinkStyle}>Contact</a>
           </div>
         </div>
       </nav>
       
-      {/* Hero Content */}
-      <div ref={heroRef} style={heroStyle}>
-        <div style={techBorderStyle}>
-          <div style={cornerStyle1} />
-          <div style={cornerStyle2} />
-          <div style={cornerStyle3} />
-          <div style={cornerStyle4} />
-          
-          <div style={glitchTextContainerStyle}>
-            <h1 style={heroTitleStyle} className={glitchActive ? 'glitch' : ''}>
-              NEXT-GENERATION
-              <br />
-              <span style={gradientTextStyle}>AI-POWERED</span>
-              <br />
-              EDUCATION PLATFORM
-            </h1>
+      {/* Hero Section */}
+      <section style={heroSection}>
+        <div style={heroContent}>
+          <div style={badgeStyle}>Indian AI Startup</div>
+          <h1 style={heroTitle}>
+            Designing & Creating
+            <br />
+            <span style={gradientText}>AI Tools</span> for Services
+          </h1>
+          <p style={heroDescription}>
+            We design and create innovative AI tools for various services. 
+            Join our internship program to work on real AI projects and gain hands-on experience.
+          </p>
+          <div style={buttonGroup}>
+            <a href="/programs" style={primaryButton}>View AI Tools</a>
+            <a href="/contact" style={secondaryButton}>Apply for Internship</a>
           </div>
         </div>
-        
-        <p style={heroSubtitleStyle}>
-          <span style={typewriterStyle}>
-            {'[ INITIALIZING_SYSTEM... ]'}
-          </span>
-          <br />
-          Transforming learners into tech innovators through advanced artificial intelligence,
-          <br />
-          machine learning, and cutting-edge technology training.
-        </p>
-        
-        <div style={ctaButtonsStyle}>
-          <a 
-            href="/programs" 
-            style={btnPrimaryStyle}
-          >
-            <span style={buttonInnerStyle}>
-              {'>> EXPLORE PROGRAMS'}
-            </span>
-          </a>
-          <a 
-            href="/about" 
-            style={btnSecondaryStyle}
-          >
-            <span style={buttonInnerStyle}>
-              {'[_VIEW_SYSTEMS_]'}
-            </span>
-          </a>
-        </div>
-        
-        <div style={statsGridStyle}>
-          <div style={statBoxStyle}>
-            <div style={statNumberStyle}>15K+</div>
-            <div style={statLabelStyle}>GRADUATES</div>
+      </section>
+
+      {/* Stats Section */}
+      <section style={statsSection}>
+        <div style={statsContainer}>
+          <div style={statItem}>
+            <div style={statNumber}>50+</div>
+            <div style={statLabel}>AI Tools Created</div>
           </div>
-          <div style={statBoxStyle}>
-            <div style={statNumberStyle}>98%</div>
-            <div style={statLabelStyle}>SUCCESS_RATE</div>
+          <div style={statItem}>
+            <div style={statNumber}>100+</div>
+            <div style={statLabel}>Interns Trained</div>
           </div>
-          <div style={statBoxStyle}>
-            <div style={statNumberStyle}>50+</div>
-            <div style={statLabelStyle}>AI_PROGRAMS</div>
+          <div style={statItem}>
+            <div style={statNumber}>🇮🇳</div>
+            <div style={statLabel}>Made in India</div>
           </div>
         </div>
-      </div>
-      
-      <div style={scrollIndicatorStyle}>
-        <div style={arrowAnimStyle}>▼</div>
-        SCROLL_TO_EXPLORE
-      </div>
+      </section>
     </div>
   )
 }
 
-// Styles - Futuristic Tech Theme
-const scanLinesStyle = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  background: 'repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.03) 0px, transparent 2px, transparent 4px)',
-  pointerEvents: 'none',
-  zIndex: 10
+// Modern Styles
+const pageStyle = {
+  minHeight: '100vh',
+  background: 'linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)',
+  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
 }
 
 const navStyle = {
-  position: 'fixed',
+  position: 'sticky',
   top: 0,
-  left: 0,
-  right: 0,
-  background: 'rgba(0, 0, 0, 0.85)',
-  backdropFilter: 'blur(20px)',
+  background: '#ffffff',
+  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
   zIndex: 1000,
-  padding: '1rem 0',
-  borderBottom: '2px solid rgba(0, 255, 255, 0.3)',
-  boxShadow: '0 0 30px rgba(0, 255, 255, 0.2)'
+  padding: '1rem 0'
 }
 
 const navContainerStyle = {
-  maxWidth: '1800px',
+  maxWidth: '1200px',
   margin: '0 auto',
-  padding: '0 4rem',
+  padding: '0 2rem',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center'
 }
 
 const logoStyle = {
-  fontSize: '1.8rem',
-  fontWeight: 900,
-  color: '#00ffff',
-  letterSpacing: '3px',
-  fontFamily: 'monospace',
-  textShadow: '0 0 20px rgba(0, 255, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.4)'
-}
-
-const glitchStyle = {
-  animation: 'glitch 0.3s infinite'
+  fontSize: '1.5rem',
+  fontWeight: 700,
+  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text'
 }
 
 const navLinksStyle = {
   display: 'flex',
-  gap: '3rem',
-  fontFamily: 'monospace',
-  fontSize: '0.9rem',
-  letterSpacing: '2px'
+  gap: '2rem',
+  alignItems: 'center'
 }
 
 const navLinkStyle = {
-  color: 'rgba(255, 255, 255, 0.7)',
-  transition: 'all 0.3s ease',
-  position: 'relative',
-  padding: '0.5rem 0'
+  color: '#475569',
+  textDecoration: 'none',
+  fontSize: '0.95rem',
+  transition: 'color 0.2s ease',
+  fontWeight: 500
 }
 
-const linkGlowStyle = {
-  textShadow: '0 0 10px rgba(0, 255, 255, 0.8)'
+const heroSection = {
+  padding: '6rem 2rem',
+  maxWidth: '1200px',
+  margin: '0 auto'
 }
 
-const heroStyle = {
-  position: 'relative',
-  zIndex: 1,
-  minHeight: '100vh',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
+const heroContent = {
   textAlign: 'center',
-  padding: '0 4rem'
+  maxWidth: '800px',
+  margin: '0 auto'
 }
 
-const techBorderStyle = {
-  position: 'relative',
-  padding: '4rem',
-  marginBottom: '3rem'
+const badgeStyle = {
+  display: 'inline-block',
+  padding: '0.5rem 1rem',
+  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+  color: '#ffffff',
+  borderRadius: '50px',
+  fontSize: '0.875rem',
+  fontWeight: 600,
+  marginBottom: '2rem'
 }
 
-const cornerStyle1 = {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '30px',
-  height: '30px',
-  borderTop: '3px solid #00ffff',
-  borderLeft: '3px solid #00ffff',
-  boxShadow: '0 0 15px rgba(0, 255, 255, 0.6)'
+const heroTitle = {
+  fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+  fontWeight: 800,
+  lineHeight: 1.2,
+  color: '#1e293b',
+  marginBottom: '1.5rem',
+  letterSpacing: '-0.02em'
 }
 
-const cornerStyle2 = {
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  width: '30px',
-  height: '30px',
-  borderTop: '3px solid #00ffff',
-  borderRight: '3px solid #00ffff',
-  boxShadow: '0 0 15px rgba(0, 255, 255, 0.6)'
+const gradientText = {
+  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text'
 }
 
-const cornerStyle3 = {
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  width: '30px',
-  height: '30px',
-  borderBottom: '3px solid #00ffff',
-  borderLeft: '3px solid #00ffff',
-  boxShadow: '0 0 15px rgba(0, 255, 255, 0.6)'
+const heroDescription = {
+  fontSize: '1.25rem',
+  color: '#64748b',
+  lineHeight: 1.7,
+  marginBottom: '2.5rem',
+  maxWidth: '600px',
+  margin: '0 auto 2.5rem'
 }
 
-const cornerStyle4 = {
-  position: 'absolute',
-  bottom: 0,
-  right: 0,
-  width: '30px',
-  height: '30px',
-  borderBottom: '3px solid #00ffff',
-  borderRight: '3px solid #00ffff',
-  boxShadow: '0 0 15px rgba(0, 255, 255, 0.6)'
+const buttonGroup = {
+  display: 'flex',
+  gap: '1rem',
+  justifyContent: 'center',
+  flexWrap: 'wrap'
 }
 
-const glitchTextContainerStyle = {
-  position: 'relative'
+const primaryButton = {
+  padding: '0.875rem 2rem',
+  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+  color: '#ffffff',
+  borderRadius: '8px',
+  textDecoration: 'none',
+  fontWeight: 600,
+  fontSize: '1rem',
+  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+  display: 'inline-block',
+  boxShadow: '0 4px 6px rgba(99, 102, 241, 0.3)'
 }
 
-const heroTitleStyle = {
-  fontSize: '5.5rem',
-  fontWeight: 900,
-  lineHeight: 1.1,
-  marginBottom: '0',
-  letterSpacing: '5px',
-  fontFamily: 'monospace',
-  color: '#fff',
-  textTransform: 'uppercase',
-  textShadow: '0 0 20px rgba(0, 255, 255, 0.5)'
+const secondaryButton = {
+  padding: '0.875rem 2rem',
+  background: '#ffffff',
+  color: '#6366f1',
+  border: '2px solid #6366f1',
+  borderRadius: '8px',
+  textDecoration: 'none',
+  fontWeight: 600,
+  fontSize: '1rem',
+  transition: 'all 0.2s ease',
+  display: 'inline-block'
 }
 
-const gradientTextStyle = {
-  background: 'linear-gradient(90deg, #00ffff 0%, #ff00ff 50%, #00ffff 100%)',
+const statsSection = {
+  padding: '4rem 2rem',
+  background: '#ffffff',
+  borderTop: '1px solid #e2e8f0'
+}
+
+const statsContainer = {
+  maxWidth: '1200px',
+  margin: '0 auto',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+  gap: '3rem'
+}
+
+const statItem = {
+  textAlign: 'center'
+}
+
+const statNumber = {
+  fontSize: '3rem',
+  fontWeight: 800,
+  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
-  textShadow: 'none',
-  filter: 'drop-shadow(0 0 30px rgba(0, 255, 255, 0.8))'
+  marginBottom: '0.5rem'
 }
 
-const typewriterStyle = {
-  fontFamily: 'monospace',
+const statLabel = {
   fontSize: '1rem',
-  color: '#00ff00',
-  textShadow: '0 0 10px rgba(0, 255, 0, 0.8)',
-  letterSpacing: '2px'
+  color: '#64748b',
+  fontWeight: 500
 }
-
-const heroSubtitleStyle = {
-  fontSize: '1.2rem',
-  color: 'rgba(255, 255, 255, 0.7)',
-  marginBottom: '4rem',
-  maxWidth: '1000px',
-  lineHeight: 2,
-  fontFamily: 'monospace',
-  letterSpacing: '1px'
-}
-
-const ctaButtonsStyle = {
-  display: 'flex',
-  gap: '2rem',
-  marginBottom: '5rem'
-}
-
-const buttonInnerStyle = {
-  fontFamily: 'monospace',
-  letterSpacing: '3px'
-}
-
-const btnPrimaryStyle = {
-  padding: '1.5rem 3rem',
-  background: 'rgba(0, 255, 255, 0.1)',
-  color: '#00ffff',
-  fontWeight: 700,
-  fontSize: '1rem',
-  border: '2px solid #00ffff',
-  transition: 'all 0.3s ease',
-  position: 'relative',
-  overflow: 'hidden',
-  boxShadow: '0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 20px rgba(0, 255, 255, 0.1)',
-  textShadow: '0 0 10px rgba(0, 255, 255, 0.8)'
-}
-
-const btnSecondaryStyle = {
-  padding: '1.5rem 3rem',
-  background: 'rgba(255, 0, 255, 0.05)',
-  color: '#ff00ff',
-  fontWeight: 700,
-  fontSize: '1rem',
-  border: '2px solid #ff00ff',
-  transition: 'all 0.3s ease',
-  boxShadow: '0 0 20px rgba(255, 0, 255, 0.3), inset 0 0 20px rgba(255, 0, 255, 0.05)',
-  textShadow: '0 0 10px rgba(255, 0, 255, 0.6)'
-}
-
-const statsGridStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
-  gap: '3rem',
-  maxWidth: '1000px',
-  width: '100%'
-}
-
-const statBoxStyle = {
-  background: 'rgba(0, 255, 255, 0.05)',
-  border: '2px solid rgba(0, 255, 255, 0.3)',
-  padding: '2rem',
-  position: 'relative',
-  boxShadow: '0 0 30px rgba(0, 255, 255, 0.2), inset 0 0 30px rgba(0, 255, 255, 0.05)'
-}
-
-const statNumberStyle = {
-  fontSize: '3.5rem',
-  fontWeight: 900,
-  color: '#00ffff',
-  fontFamily: 'monospace',
-  marginBottom: '0.5rem',
-  textShadow: '0 0 20px rgba(0, 255, 255, 0.8)'
-}
-
-const statLabelStyle = {
-  fontSize: '0.8rem',
-  color: 'rgba(255, 255, 255, 0.6)',
-  letterSpacing: '3px',
-  fontFamily: 'monospace'
-}
-
-const scrollIndicatorStyle = {
-  position: 'absolute',
-  bottom: '3rem',
-  left: '50%',
-  transform: 'translateX(-50%)',
-  color: '#00ffff',
-  fontSize: '0.8rem',
-  letterSpacing: '3px',
-  fontFamily: 'monospace',
-  zIndex: 2,
-  textAlign: 'center',
-  textShadow: '0 0 10px rgba(0, 255, 255, 0.8)'
-}
-
-const arrowAnimStyle = {
-  fontSize: '1.5rem',
-  marginBottom: '0.5rem',
-  animation: 'bounce 2s infinite'
-}
-

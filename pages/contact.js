@@ -1,77 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import * as THREE from 'three'
-
-// Data Transmission Waves
-function DataWaves() {
-  const groupRef = useRef()
-  
-  useEffect(() => {
-    // Create multiple wave rings
-    for(let i = 0; i < 8; i++) {
-      const geometry = new THREE.TorusGeometry(5 + i * 2, 0.1, 16, 100)
-      const material = new THREE.MeshBasicMaterial({
-        color: i % 2 === 0 ? 0x00ffff : 0xff00ff,
-        transparent: true,
-        opacity: 0.6 - i * 0.05
-      })
-      const torus = new THREE.Mesh(geometry, material)
-      torus.rotation.x = Math.PI / 2
-      torus.userData.delay = i * 0.3
-      torus.userData.originalScale = 1
-      groupRef.current.add(torus)
-    }
-    
-    // Add signal particles
-    for(let i = 0; i < 50; i++) {
-      const particleGeom = new THREE.SphereGeometry(0.15, 8, 8)
-      const particleMat = new THREE.MeshBasicMaterial({ 
-        color: Math.random() > 0.5 ? 0x00ffff : 0xff00ff 
-      })
-      const particle = new THREE.Mesh(particleGeom, particleMat)
-      
-      const angle = Math.random() * Math.PI * 2
-      const radius = Math.random() * 20 + 5
-      particle.position.x = Math.cos(angle) * radius
-      particle.position.y = (Math.random() - 0.5) * 10
-      particle.position.z = Math.sin(angle) * radius
-      
-      particle.userData.speed = Math.random() * 0.02 + 0.01
-      particle.userData.angle = angle
-      particle.userData.radius = radius
-      
-      groupRef.current.add(particle)
-    }
-  }, [])
-  
-  useFrame((state) => {
-    if(groupRef.current) {
-      groupRef.current.rotation.y += 0.003
-      
-      groupRef.current.children.forEach((child, index) => {
-        if(child.geometry.type === 'TorusGeometry') {
-          const time = state.clock.elapsedTime - child.userData.delay
-          child.scale.set(
-            1 + Math.sin(time * 2) * 0.2,
-            1 + Math.sin(time * 2) * 0.2,
-            1 + Math.sin(time * 2) * 0.2
-          )
-          child.material.opacity = 0.4 + Math.sin(time * 2) * 0.3
-        }
-        
-        // Animate particles
-        if(child.userData.speed) {
-          child.userData.angle += child.userData.speed
-          child.position.x = Math.cos(child.userData.angle) * child.userData.radius
-          child.position.z = Math.sin(child.userData.angle) * child.userData.radius
-          child.position.y += Math.sin(state.clock.elapsedTime + index) * 0.01
-        }
-      })
-    }
-  })
-  
-  return <group ref={groupRef} />
-}
+import { useState } from 'react'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -84,613 +11,421 @@ export default function Contact() {
   
   const handleSubmit = (e) => {
     e.preventDefault()
-    alert('Message transmitted successfully! We will contact you soon.')
+    alert('Message sent successfully! We will contact you soon.')
   }
   
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', background: '#000' }}>
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
-        <Canvas camera={{ position: [0, 0, 30], fov: 75 }}>
-          <ambientLight intensity={0.3} />
-          <pointLight position={[20, 20, 20]} intensity={1} color="#00ffff" />
-          <pointLight position={[-20, -20, -20]} intensity={0.5} color="#ff00ff" />
-          <DataWaves />
-        </Canvas>
-      </div>
-      
-      <div style={scanLinesStyle} />
-      
+    <div style={pageStyle}>
       <nav style={navStyle}>
         <div style={navContainerStyle}>
-          <a href="/" style={logoStyle}>{'>'} CYANPY_</a>
+          <a href="/" style={logoStyle}>CYANOPY</a>
           <div style={navLinksStyle}>
-            <a href="/">HOME</a>
-            <a href="/programs">PROGRAMS</a>
-            <a href="/about">ABOUT</a>
-            <a href="/global">GLOBAL</a>
-            <a href="/contact" style={{ color: '#00ffff', textShadow: '0 0 10px rgba(0, 255, 255, 0.8)' }}>CONTACT</a>
+            <a href="/" style={navLinkStyle}>Home</a>
+            <a href="/programs" style={navLinkStyle}>Programs</a>
+            <a href="/about" style={navLinkStyle}>About</a>
+            <a href="/global" style={navLinkStyle}>Global</a>
+            <a href="/contact" style={{ ...navLinkStyle, color: '#6366f1', fontWeight: 600 }}>Contact</a>
           </div>
         </div>
       </nav>
       
-      <div style={contentStyle}>
-        <div style={containerStyle}>
-          <div style={headerStyle}>
-            <div style={taglineStyle}>{'[ INITIATE_CONTACT_PROTOCOL ]'}</div>
-            <h1 style={titleStyle}>
-              CONNECT WITH <span style={gradientTextStyle}>CYANPY</span>
+      <section style={contentSection}>
+        <div style={container}>
+          <div style={header}>
+            <div style={badge}>Get in Touch</div>
+            <h1 style={title}>
+              Contact <span style={gradientText}>CYANOPY</span>
             </h1>
-            <p style={descriptionStyle}>
-              Ready to start your journey? Our team is standing by to assist you
+            <p style={description}>
+              Interested in our AI tools? Want to apply for internships? Get in touch!
             </p>
           </div>
           
-          <div style={mainGridStyle}>
+          <div style={mainGrid}>
             {/* Contact Info */}
-            <div style={infoSectionStyle}>
-              <h2 style={sectionTitleStyle}>{'>> CONTACT_CHANNELS'}</h2>
+            <div style={infoSection}>
+              <h2 style={sectionTitle}>Company Information</h2>
               
-              <div style={contactBoxStyle}>
-                <div style={boxHeaderStyle}>
-                  <div style={headerDotStyle} />
-                  <span>HEADQUARTERS</span>
+              <div style={companyInfo}>
+                <div style={infoRow}>
+                  <span style={infoLabel}>Mobile:</span>
+                  <span style={infoValue}>+91 80739 25727 | +91 63662 10650</span>
                 </div>
-                <h3 style={locationNameStyle}>GENEVA, SWITZERLAND</h3>
-                <div style={infoLineStyle}>
-                  <span style={labelStyle}>ADDRESS:</span>
-                  <span style={valueStyle}>Rue du Mont-Blanc 14, 1201</span>
+                <div style={infoRow}>
+                  <span style={infoLabel}>Email:</span>
+                  <span style={infoValue}>cyanopy3@gmail.com</span>
                 </div>
-                <div style={infoLineStyle}>
-                  <span style={labelStyle}>COMM_LINK:</span>
-                  <span style={valueStyle}>+41 227415900</span>
+                <div style={infoRow}>
+                  <span style={infoLabel}>Address:</span>
+                  <span style={infoValue}>
+                    No. 52, 2nd Cross, Indiranagar, WCR, Rajajinagar,<br />
+                    Bangalore North, Karnataka – 560010
+                  </span>
                 </div>
-                <div style={infoLineStyle}>
-                  <span style={labelStyle}>EMAIL:</span>
-                  <span style={valueStyle}>hq@cyanpy.com</span>
-                </div>
-              </div>
-              
-              <div style={contactBoxStyle}>
-                <div style={boxHeaderStyle}>
-                  <div style={headerDotStyle} />
-                  <span>ASIA HUB</span>
-                </div>
-                <h3 style={locationNameStyle}>SINGAPORE</h3>
-                <div style={infoLineStyle}>
-                  <span style={labelStyle}>ADDRESS:</span>
-                  <span style={valueStyle}>Marina One East Tower</span>
-                </div>
-                <div style={infoLineStyle}>
-                  <span style={labelStyle}>COMM_LINK:</span>
-                  <span style={valueStyle}>+65 62286490</span>
-                </div>
-                <div style={infoLineStyle}>
-                  <span style={labelStyle}>EMAIL:</span>
-                  <span style={valueStyle}>asia@cyanpy.com</span>
-                </div>
-              </div>
-              
-              <div style={contactBoxStyle}>
-                <div style={boxHeaderStyle}>
-                  <div style={headerDotStyle} />
-                  <span>MIDDLE EAST</span>
-                </div>
-                <h3 style={locationNameStyle}>DUBAI, UAE</h3>
-                <div style={infoLineStyle}>
-                  <span style={labelStyle}>ADDRESS:</span>
-                  <span style={valueStyle}>DIFC, Brookfield Place</span>
-                </div>
-                <div style={infoLineStyle}>
-                  <span style={labelStyle}>COMM_LINK:</span>
-                  <span style={valueStyle}>+971 45914032</span>
-                </div>
-                <div style={infoLineStyle}>
-                  <span style={labelStyle}>EMAIL:</span>
-                  <span style={valueStyle}>dubai@cyanpy.com</span>
-                </div>
-              </div>
-              
-              <div style={supportBoxStyle}>
-                <h3 style={supportTitleStyle}>{'>> 24/7_SUPPORT'}</h3>
-                <p style={supportTextStyle}>
-                  Our AI-powered support team is available around the clock to answer your questions
-                </p>
-                <div style={supportBadgeStyle}>ALWAYS_ONLINE</div>
               </div>
             </div>
             
             {/* Contact Form */}
-            <div style={formContainerStyle}>
-              <div style={formHeaderStyle}>
-                <div style={formCorner1} />
-                <div style={formCorner2} />
-                <h2 style={formTitleStyle}>{'[ TRANSMISSION_FORM ]'}</h2>
-              </div>
+            <div style={formSection}>
+              <h2 style={formTitle}>Send us a Message</h2>
               
-              <form onSubmit={handleSubmit} style={formStyle}>
-                <div style={formGroupStyle}>
-                  <label style={labelInputStyle}>
-                    {'>'} FULL_NAME *
-                  </label>
+              <form onSubmit={handleSubmit} style={form}>
+                <div style={formGroup}>
+                  <label style={label}>Full Name *</label>
                   <input 
                     type="text" 
                     required 
-                    style={inputStyle}
-                    placeholder="ENTER_NAME..."
+                    style={input}
+                    placeholder="Enter your name"
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
                   />
                 </div>
                 
-                <div style={formGroupStyle}>
-                  <label style={labelInputStyle}>
-                    {'>'} EMAIL_ADDRESS *
-                  </label>
+                <div style={formGroup}>
+                  <label style={label}>Email Address *</label>
                   <input 
                     type="email" 
                     required 
-                    style={inputStyle}
-                    placeholder="YOUR@EMAIL.COM..."
+                    style={input}
+                    placeholder="your@email.com"
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                   />
                 </div>
                 
-                <div style={formGroupStyle}>
-                  <label style={labelInputStyle}>
-                    {'>'} PHONE_NUMBER
-                  </label>
+                <div style={formGroup}>
+                  <label style={label}>Phone Number</label>
                   <input 
                     type="tel" 
-                    style={inputStyle}
-                    placeholder="+1_234_567_8900..."
+                    style={input}
+                    placeholder="+91 1234567890"
                     value={formData.phone}
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                   />
                 </div>
                 
-                <div style={formGroupStyle}>
-                  <label style={labelInputStyle}>
-                    {'>'} SELECT_PROGRAM
-                  </label>
+                <div style={formGroup}>
+                  <label style={label}>Interest / Internship Type</label>
                   <select 
-                    style={selectStyle}
+                    style={select}
                     value={formData.program}
                     onChange={(e) => setFormData({...formData, program: e.target.value})}
                   >
-                    <option value="">SELECT_PROGRAM...</option>
-                    <option value="ai-ml">AI & MACHINE_LEARNING</option>
-                    <option value="fullstack">FULL_STACK_DEVELOPMENT</option>
-                    <option value="data-science">DATA_SCIENCE_&_ANALYTICS</option>
-                    <option value="cloud">CLOUD_COMPUTING</option>
-                    <option value="cybersecurity">CYBERSECURITY</option>
-                    <option value="blockchain">BLOCKCHAIN_&_WEB3</option>
+                    <option value="">Select an option...</option>
+                    <option value="ai-chatbot">AI Chatbot Tools - Internship</option>
+                    <option value="ai-content">AI Content Generator - Internship</option>
+                    <option value="ai-analytics">AI Data Analytics - Internship</option>
+                    <option value="ai-image">AI Image Processing - Internship</option>
+                    <option value="ai-automation">AI Automation Tools - Internship</option>
+                    <option value="ai-voice">AI Voice Assistant - Internship</option>
+                    <option value="general">General Inquiry</option>
                   </select>
                 </div>
                 
-                <div style={formGroupStyle}>
-                  <label style={labelInputStyle}>
-                    {'>'} MESSAGE *
-                  </label>
+                <div style={formGroup}>
+                  <label style={label}>Message *</label>
                   <textarea 
                     required 
-                    style={textareaStyle}
-                    placeholder="ENTER_YOUR_MESSAGE..."
+                    style={textarea}
+                    placeholder="Enter your message..."
                     rows={6}
                     value={formData.message}
                     onChange={(e) => setFormData({...formData, message: e.target.value})}
                   />
                 </div>
                 
-                <button 
-                  type="submit" 
-                  style={submitBtnStyle}
-                >
-                  <span style={btnInnerStyle}>
-                    {'>> TRANSMIT_MESSAGE'}
-                  </span>
+                <button type="submit" style={submitButton}>
+                  Send Message
                 </button>
                 
-                <div style={formFooterStyle}>
-                  <div style={securityBadgeStyle}>
-                    🔒 SECURED_CONNECTION
-                  </div>
-                  <div style={responseTimeStyle}>
-                    ⚡ RESPONSE: {'<24_HOURS'}
-                  </div>
+                <div style={formFooter}>
+                  <div style={footerText}>🔒 Secured Connection</div>
+                  <div style={footerText}>⚡ Response within 24 hours</div>
                 </div>
               </form>
-              
-              <div style={formCorner3} />
-              <div style={formCorner4} />
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }
 
 // Styles
-const scanLinesStyle = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  background: 'repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.03) 0px, transparent 2px, transparent 4px)',
-  pointerEvents: 'none',
-  zIndex: 10
+const pageStyle = {
+  minHeight: '100vh',
+  background: 'linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)',
+  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
 }
 
 const navStyle = {
-  position: 'fixed',
+  position: 'sticky',
   top: 0,
-  left: 0,
-  right: 0,
-  background: 'rgba(0, 0, 0, 0.85)',
-  backdropFilter: 'blur(20px)',
+  background: '#ffffff',
+  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
   zIndex: 1000,
-  padding: '1rem 0',
-  borderBottom: '2px solid rgba(0, 255, 255, 0.3)',
-  boxShadow: '0 0 30px rgba(0, 255, 255, 0.2)'
+  padding: '1rem 0'
 }
 
 const navContainerStyle = {
-  maxWidth: '1800px',
+  maxWidth: '1200px',
   margin: '0 auto',
-  padding: '0 4rem',
+  padding: '0 2rem',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center'
 }
 
 const logoStyle = {
-  fontSize: '1.8rem',
-  fontWeight: 900,
-  color: '#00ffff',
-  letterSpacing: '3px',
-  fontFamily: 'monospace',
-  textShadow: '0 0 20px rgba(0, 255, 255, 0.8)'
+  fontSize: '1.5rem',
+  fontWeight: 700,
+  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
+  textDecoration: 'none'
 }
 
 const navLinksStyle = {
   display: 'flex',
-  gap: '3rem',
-  fontFamily: 'monospace',
-  fontSize: '0.9rem',
-  letterSpacing: '2px',
-  color: 'rgba(255, 255, 255, 0.7)'
+  gap: '2rem',
+  alignItems: 'center'
 }
 
-const contentStyle = {
-  position: 'relative',
-  zIndex: 1,
-  paddingTop: '140px',
-  paddingBottom: '6rem',
-  minHeight: '100vh'
+const navLinkStyle = {
+  color: '#475569',
+  textDecoration: 'none',
+  fontSize: '0.95rem',
+  fontWeight: 500
 }
 
-const containerStyle = {
-  maxWidth: '1800px',
-  margin: '0 auto',
-  padding: '0 4rem'
+const contentSection = {
+  padding: '4rem 2rem',
+  maxWidth: '1200px',
+  margin: '0 auto'
 }
 
-const headerStyle = {
+const container = {
+  maxWidth: '100%'
+}
+
+const header = {
   textAlign: 'center',
-  marginBottom: '6rem'
+  marginBottom: '4rem'
 }
 
-const taglineStyle = {
-  fontFamily: 'monospace',
-  fontSize: '0.9rem',
-  color: '#00ff00',
-  letterSpacing: '3px',
-  marginBottom: '2rem',
-  textShadow: '0 0 10px rgba(0, 255, 0, 0.8)'
+const badge = {
+  display: 'inline-block',
+  padding: '0.5rem 1rem',
+  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+  color: '#ffffff',
+  borderRadius: '50px',
+  fontSize: '0.875rem',
+  fontWeight: 600,
+  marginBottom: '1.5rem'
 }
 
-const titleStyle = {
-  fontSize: '5rem',
-  fontWeight: 900,
-  marginBottom: '2rem',
-  letterSpacing: '8px',
-  fontFamily: 'monospace',
-  textTransform: 'uppercase',
-  textShadow: '0 0 30px rgba(0, 255, 255, 0.5)'
+const title = {
+  fontSize: 'clamp(2.5rem, 5vw, 3.5rem)',
+  fontWeight: 800,
+  color: '#1e293b',
+  marginBottom: '1rem',
+  lineHeight: 1.2
 }
 
-const gradientTextStyle = {
-  background: 'linear-gradient(90deg, #00ffff 0%, #ff00ff 50%, #00ffff 100%)',
+const gradientText = {
+  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%)',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
-  filter: 'drop-shadow(0 0 30px rgba(0, 255, 255, 0.8))'
+  backgroundClip: 'text'
 }
 
-const descriptionStyle = {
-  fontSize: '1.2rem',
-  color: 'rgba(255, 255, 255, 0.7)',
-  fontFamily: 'monospace',
-  letterSpacing: '1px'
+const description = {
+  fontSize: '1.125rem',
+  color: '#64748b',
+  lineHeight: 1.7,
+  maxWidth: '700px',
+  margin: '0 auto'
 }
 
-const mainGridStyle = {
+const mainGrid = {
   display: 'grid',
-  gridTemplateColumns: '1fr 1.5fr',
-  gap: '4rem'
+  gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+  gap: '3rem'
 }
 
-const infoSectionStyle = {
+const infoSection = {
   display: 'flex',
   flexDirection: 'column',
   gap: '2rem'
 }
 
-const sectionTitleStyle = {
-  fontSize: '2rem',
-  fontWeight: 900,
-  color: '#ff00ff',
-  fontFamily: 'monospace',
-  letterSpacing: '3px',
-  marginBottom: '1rem',
-  textShadow: '0 0 15px rgba(255, 0, 255, 0.6)'
-}
-
-const contactBoxStyle = {
-  background: 'rgba(0, 20, 40, 0.5)',
-  border: '1px solid rgba(0, 255, 255, 0.3)',
-  padding: '2rem',
-  boxShadow: '0 0 20px rgba(0, 255, 255, 0.1)'
-}
-
-const boxHeaderStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '0.5rem',
-  fontSize: '0.7rem',
-  color: 'rgba(255, 255, 255, 0.5)',
-  letterSpacing: '2px',
-  fontFamily: 'monospace',
-  marginBottom: '1.5rem'
-}
-
-const headerDotStyle = {
-  width: '8px',
-  height: '8px',
-  background: '#00ff00',
-  boxShadow: '0 0 10px rgba(0, 255, 0, 0.8)'
-}
-
-const locationNameStyle = {
+const sectionTitle = {
   fontSize: '1.5rem',
-  fontWeight: 900,
-  color: '#00ffff',
-  fontFamily: 'monospace',
-  letterSpacing: '2px',
-  marginBottom: '1.5rem',
-  textShadow: '0 0 15px rgba(0, 255, 255, 0.6)'
+  fontWeight: 700,
+  color: '#1e293b',
+  marginBottom: '1rem'
 }
 
-const infoLineStyle = {
+const companyInfo = {
+  padding: '1.5rem 0',
+  borderBottom: '1px solid #e2e8f0'
+}
+
+const companyName = {
+  fontSize: '1.5rem',
+  fontWeight: 700,
+  color: '#1e293b',
+  marginBottom: '1.5rem',
+  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text'
+}
+
+const websiteLink = {
+  color: '#6366f1',
+  textDecoration: 'none',
+  fontWeight: 500
+}
+
+const infoRow = {
   display: 'flex',
   justifyContent: 'space-between',
+  marginBottom: '0.75rem',
+  fontSize: '0.95rem'
+}
+
+const infoLabel = {
+  color: '#64748b',
+  fontWeight: 500
+}
+
+const infoValue = {
+  color: '#1e293b',
+  fontWeight: 500
+}
+
+const internshipSection = {
+  padding: '1.5rem',
+  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+  borderRadius: '12px',
+  color: '#ffffff'
+}
+
+const internshipTitle = {
+  fontSize: '1.25rem',
+  fontWeight: 700,
+  marginBottom: '0.75rem'
+}
+
+const internshipText = {
+  fontSize: '0.95rem',
+  lineHeight: 1.6,
   marginBottom: '1rem',
-  fontFamily: 'monospace',
-  fontSize: '0.9rem'
+  opacity: 0.95
 }
 
-const labelStyle = {
-  color: 'rgba(255, 255, 255, 0.5)',
-  letterSpacing: '1px'
-}
-
-const valueStyle = {
-  color: 'rgba(255, 255, 255, 0.9)',
-  letterSpacing: '1px'
-}
-
-const supportBoxStyle = {
-  background: 'rgba(255, 0, 255, 0.1)',
-  border: '2px solid rgba(255, 0, 255, 0.4)',
-  padding: '2rem',
-  boxShadow: '0 0 30px rgba(255, 0, 255, 0.2)'
-}
-
-const supportTitleStyle = {
-  fontSize: '1.3rem',
-  fontWeight: 900,
-  color: '#ff00ff',
-  fontFamily: 'monospace',
-  letterSpacing: '2px',
-  marginBottom: '1rem',
-  textShadow: '0 0 15px rgba(255, 0, 255, 0.8)'
-}
-
-const supportTextStyle = {
-  fontFamily: 'monospace',
-  fontSize: '0.9rem',
-  color: 'rgba(255, 255, 255, 0.7)',
-  lineHeight: 1.8,
-  marginBottom: '1.5rem'
-}
-
-const supportBadgeStyle = {
+const applyBadge = {
   display: 'inline-block',
   padding: '0.5rem 1rem',
-  background: 'rgba(0, 255, 0, 0.2)',
-  border: '1px solid #00ff00',
-  color: '#00ff00',
-  fontSize: '0.7rem',
-  letterSpacing: '2px',
-  fontFamily: 'monospace',
-  boxShadow: '0 0 10px rgba(0, 255, 0, 0.4)'
+  background: '#ffffff',
+  color: '#6366f1',
+  borderRadius: '6px',
+  fontSize: '0.875rem',
+  fontWeight: 600
 }
 
-const formContainerStyle = {
-  position: 'relative',
-  background: 'rgba(0, 20, 40, 0.6)',
-  border: '2px solid rgba(0, 255, 255, 0.4)',
-  padding: '0',
-  boxShadow: '0 0 40px rgba(0, 255, 255, 0.2), inset 0 0 40px rgba(0, 255, 255, 0.05)'
+const formSection = {
+  background: '#ffffff',
+  padding: '2rem',
+  borderRadius: '12px'
 }
 
-const formHeaderStyle = {
-  position: 'relative',
-  padding: '2rem 3rem',
-  borderBottom: '2px solid rgba(0, 255, 255, 0.3)'
-}
-
-const formCorner1 = {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '30px',
-  height: '30px',
-  borderTop: '3px solid #00ffff',
-  borderLeft: '3px solid #00ffff',
-  boxShadow: '0 0 15px rgba(0, 255, 255, 0.6)'
-}
-
-const formCorner2 = {
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  width: '30px',
-  height: '30px',
-  borderTop: '3px solid #00ffff',
-  borderRight: '3px solid #00ffff',
-  boxShadow: '0 0 15px rgba(0, 255, 255, 0.6)'
-}
-
-const formCorner3 = {
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  width: '30px',
-  height: '30px',
-  borderBottom: '3px solid #ff00ff',
-  borderLeft: '3px solid #ff00ff',
-  boxShadow: '0 0 15px rgba(255, 0, 255, 0.6)'
-}
-
-const formCorner4 = {
-  position: 'absolute',
-  bottom: 0,
-  right: 0,
-  width: '30px',
-  height: '30px',
-  borderBottom: '3px solid #ff00ff',
-  borderRight: '3px solid #ff00ff',
-  boxShadow: '0 0 15px rgba(255, 0, 255, 0.6)'
-}
-
-const formTitleStyle = {
-  fontSize: '2rem',
-  fontWeight: 900,
-  color: '#00ffff',
-  fontFamily: 'monospace',
-  letterSpacing: '3px',
-  textShadow: '0 0 20px rgba(0, 255, 255, 0.8)'
-}
-
-const formStyle = {
-  padding: '3rem'
-}
-
-const formGroupStyle = {
+const formTitle = {
+  fontSize: '1.5rem',
+  fontWeight: 700,
+  color: '#1e293b',
   marginBottom: '2rem'
 }
 
-const labelInputStyle = {
-  display: 'block',
-  fontSize: '0.9rem',
-  color: '#00ffff',
-  marginBottom: '0.8rem',
-  fontFamily: 'monospace',
-  letterSpacing: '2px',
-  textShadow: '0 0 10px rgba(0, 255, 255, 0.6)'
+const form = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1.5rem'
 }
 
-const inputStyle = {
-  width: '100%',
-  padding: '1.2rem',
-  background: 'rgba(0, 0, 0, 0.5)',
-  border: '1px solid rgba(0, 255, 255, 0.3)',
-  color: '#ffffff',
-  fontSize: '1rem',
-  fontFamily: 'monospace',
-  transition: 'all 0.3s ease',
-  boxShadow: 'inset 0 0 20px rgba(0, 255, 255, 0.05)'
+const formGroup = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.5rem'
 }
 
-const selectStyle = {
-  width: '100%',
-  padding: '1.2rem',
-  background: 'rgba(0, 0, 0, 0.5)',
-  border: '1px solid rgba(0, 255, 255, 0.3)',
-  color: '#ffffff',
+const label = {
+  fontSize: '0.875rem',
+  fontWeight: 600,
+  color: '#475569'
+}
+
+const input = {
+  padding: '0.875rem',
+  border: '1px solid #e2e8f0',
+  borderRadius: '8px',
   fontSize: '1rem',
-  fontFamily: 'monospace',
-  transition: 'all 0.3s ease',
-  boxShadow: 'inset 0 0 20px rgba(0, 255, 255, 0.05)',
+  fontFamily: 'inherit',
+  background: '#ffffff',
+  color: '#1e293b',
+  transition: 'border-color 0.2s ease'
+}
+
+const select = {
+  padding: '0.875rem',
+  border: '1px solid #e2e8f0',
+  borderRadius: '8px',
+  fontSize: '1rem',
+  fontFamily: 'inherit',
+  background: '#ffffff',
+  color: '#1e293b',
   cursor: 'pointer'
 }
 
-const textareaStyle = {
-  width: '100%',
-  padding: '1.2rem',
-  background: 'rgba(0, 0, 0, 0.5)',
-  border: '1px solid rgba(0, 255, 255, 0.3)',
-  color: '#ffffff',
+const textarea = {
+  padding: '0.875rem',
+  border: '1px solid #e2e8f0',
+  borderRadius: '8px',
   fontSize: '1rem',
-  fontFamily: 'monospace',
+  fontFamily: 'inherit',
+  background: '#ffffff',
+  color: '#1e293b',
   resize: 'vertical',
-  transition: 'all 0.3s ease',
-  boxShadow: 'inset 0 0 20px rgba(0, 255, 255, 0.05)',
-  minHeight: '150px'
+  minHeight: '120px'
 }
 
-const submitBtnStyle = {
-  width: '100%',
-  padding: '1.5rem',
-  background: 'rgba(0, 255, 255, 0.1)',
-  border: '2px solid #00ffff',
-  color: '#00ffff',
-  fontSize: '1.1rem',
-  fontWeight: 900,
-  fontFamily: 'monospace',
-  letterSpacing: '3px',
+const submitButton = {
+  padding: '0.875rem 2rem',
+  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+  color: '#ffffff',
+  border: 'none',
+  borderRadius: '8px',
+  fontSize: '1rem',
+  fontWeight: 600,
   cursor: 'pointer',
-  transition: 'all 0.3s ease',
-  boxShadow: '0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 20px rgba(0, 255, 255, 0.1)',
-  textShadow: '0 0 10px rgba(0, 255, 255, 0.8)',
-  marginBottom: '2rem'
+  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+  boxShadow: '0 4px 6px rgba(99, 102, 241, 0.3)'
 }
 
-const btnInnerStyle = {
-  display: 'block'
-}
-
-const formFooterStyle = {
+const formFooter = {
   display: 'flex',
   justifyContent: 'space-between',
+  paddingTop: '1rem',
+  borderTop: '1px solid #e2e8f0',
+  fontSize: '0.875rem',
+  color: '#64748b'
+}
+
+const footerText = {
+  display: 'flex',
   alignItems: 'center',
-  paddingTop: '2rem',
-  borderTop: '1px solid rgba(0, 255, 255, 0.2)'
-}
-
-const securityBadgeStyle = {
-  fontFamily: 'monospace',
-  fontSize: '0.75rem',
-  color: '#00ff00',
-  letterSpacing: '1px',
-  textShadow: '0 0 10px rgba(0, 255, 0, 0.8)'
-}
-
-const responseTimeStyle = {
-  fontFamily: 'monospace',
-  fontSize: '0.75rem',
-  color: 'rgba(255, 255, 255, 0.6)',
-  letterSpacing: '1px'
+  gap: '0.5rem'
 }
